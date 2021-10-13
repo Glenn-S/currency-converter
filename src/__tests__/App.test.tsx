@@ -4,5 +4,5 @@ import App from '../App';
 
 test('renders App component without error', () => {
   render(<App/>);
-  expect(screen.getByText('App')).toBeInTheDocument();
+  expect(screen.getByTestId('app-component')).toBeInTheDocument();
 });

@@ -11,12 +11,28 @@ export type CurrencyPickerProps = {
 const CurrencyPicker : FC<CurrencyPickerProps> = ({ label, name, value, onChange }) => {
 
   return (
-    <div className="">
-      <label>{label}: </label>
-      <select name={name} id={`${name}Id`} value={value} onChange={onChange}>
-        {Object.values(CurrencyEnum).map(currency => <option key={currency} value={currency}>{currency}</option>)}
+    <div 
+      className=""
+      data-testid="currency-picker-component" 
+    >
+      <p className="">{label}</p>
+      <select 
+        className=""
+        data-testid="currency-picker-selector"
+        name={name} 
+        id={`${name}Id`} 
+        value={value} 
+        onChange={onChange}
+      >
+        {Object.values(CurrencyEnum).map(currency => 
+          <option
+            key={currency} 
+            value={currency}
+          >
+            {currency}
+          </option>
+        )}
       </select>
-
     </div>
   );
 };

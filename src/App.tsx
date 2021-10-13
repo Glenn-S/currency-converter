@@ -21,7 +21,7 @@ const App = () : ReactElement => {
   };
 
   return (
-    <div className="container m-4">
+    <div data-testid="app-component" className="container m-4">
       <CurrencyPicker 
         label="From"
         name="fromValue" 
