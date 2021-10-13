@@ -12,12 +12,12 @@ const CurrencyPicker : FC<CurrencyPickerProps> = ({ label, name, value, onChange
 
   return (
     <div 
-      className=""
+      className="inline px-auto"
       data-testid="currency-picker-component" 
     >
-      <p className="">{label}</p>
+      <p className="inline font-medium">{label}</p>
       <select 
-        className=""
+        className="mx-3 my-2"
         data-testid="currency-picker-selector"
         name={name} 
         id={`${name}Id`} 
