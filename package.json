@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.3.0",
+    "@tailwindcss/postcss7-compat": "^2.2.16",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^12.1.10",
@@ -13,6 +14,8 @@
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.0",
     "axios": "^0.22.0",
+    "craco": "^0.0.3",
+    "concurrently": "^6.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -21,14 +24,27 @@
   },
   "scripts": {
     "start": "craco start",
+    "start:dev": "concurrently \"yarn start\" \"yarn storybook\"",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
     ]
   },
   "browserslist": {
@@ -44,16 +60,25 @@
     ]
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^6.3.11",
+    "@storybook/addon-essentials": "^6.3.11",
+    "@storybook/addon-links": "^6.3.11",
+    "@storybook/node-logger": "^6.3.11",
+    "@storybook/preset-create-react-app": "^3.2.0",
+    "@storybook/react": "^6.3.11",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/enzyme": "^3.10.9",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
-    "autoprefixer": "^9",
+    "autoprefixer": "9",
     "enzyme": "^3.11.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "postcss": "^7",
+    "postcss": "7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+  },
+  "resolutions": {
+    "babel-loader": "8.1.0"
   }
 }
