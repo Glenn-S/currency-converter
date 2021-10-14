@@ -7,9 +7,9 @@ export default {
   title: 'Converter',
   component: Converter,
   argTypes: {
-    value: { control: '' }, 
-    from: { control: '' },
-    to: { control: '' }
+    value: { control: 'text' }, 
+    from: { control: 'select' },
+    to: { control: 'select' }
   }
 } as ComponentMeta<typeof Converter>;
 
