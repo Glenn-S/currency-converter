@@ -5,19 +5,42 @@ import { renderHook } from '@testing-library/react-hooks';
 import { useCurrencyConverter } from '../currencyConverterHooks';
 import { act } from '@testing-library/react-hooks';
 
-describe('useCurrencyConverter', () => {
-  test('is not rendered on initialization', async () => {
-    const mock = jest.spyOn(request, 'getConversion').mockResolvedValue({
+const setupMock = (
+  baseValue: CurrencyEnum = CurrencyEnum.CAD, 
+  currency: CurrencyEnum = CurrencyEnum.USD, 
+  value: number = 0.76) => 
+{
+  return jest.spyOn(request, 'getConversion').mockResolvedValue({
+    data: {
+      query: {
+        base_currency: baseValue.toString(),
+        timestamp: Date.now()
+      },
+      data: { [`${currency.toString()}`]: value }
+    },
+    status: 200
+  } as AxiosResponse<CurrencyPayload>);
+};
+
+const setupMockInstance = (statusCode: number) => {
+  return jest.spyOn(request, 'getConversion').mockImplementation((params) => {
+    return Promise.resolve({
       data: {
         query: {
-          base_currency: 'CAD',
+          base_currency: params.base_currency,
           timestamp: Date.now()
         },
         data: { ['USD']: 0.76 }
       },
-      status: 200
+      status: statusCode
     } as AxiosResponse<CurrencyPayload>);
-    
+  });
+};
+
+describe('useCurrencyConverter', () => {
+  test('is not rendered on initialization', async () => {
+    const mock = setupMock();
+
     const { result } = renderHook(useCurrencyConverter);
     
     expect(mock).not.toHaveBeenCalled();
@@ -31,18 +54,7 @@ describe('useCurrencyConverter', () => {
     ${CurrencyEnum.CAD} | ${CurrencyEnum.CAD}
     ${CurrencyEnum.BDT} | ${CurrencyEnum.BDT}
   `('is called with base currency value', async ({ base_value, expected }) => {
-    const mock = jest.spyOn(request, 'getConversion').mockImplementation((params) => {
-      return Promise.resolve({
-        data: {
-          query: {
-            base_currency: params.base_currency,
-            timestamp: Date.now()
-          },
-          data: { ['USD']: 0.76 }
-        },
-        status: 200
-      } as AxiosResponse<CurrencyPayload>);
-    });
+    const mock = setupMockInstance(200);
 
     const { result } = renderHook(useCurrencyConverter);
     
@@ -58,18 +70,7 @@ describe('useCurrencyConverter', () => {
   });
 
   test('no rerender should occur if base currency does not change', async () => {
-    const mock = jest.spyOn(request, 'getConversion').mockImplementation((params) => {
-      return Promise.resolve({
-        data: {
-          query: {
-            base_currency: params.base_currency,
-            timestamp: Date.now()
-          },
-          data: { ['USD']: 0.76 }
-        },
-        status: 200
-      } as AxiosResponse<CurrencyPayload>);
-    });
+    const mock = setupMockInstance(200);
 
     const { result } = renderHook(useCurrencyConverter);
     
@@ -89,16 +90,7 @@ describe('useCurrencyConverter', () => {
   });
 
   test('base currency of USD returns 1', async () => {
-    const mock = jest.spyOn(request, 'getConversion').mockResolvedValue({
-      data: {
-        query: {
-          base_currency: CurrencyEnum.USD,
-          timestamp: Date.now()
-        },
-        data: { ['CAD']: 1.34 } // The api does not return USD value if base currency is USD
-      },
-      status: 200
-    } as AxiosResponse<CurrencyPayload>);
+    const mock = setupMock(CurrencyEnum.USD, CurrencyEnum.CAD, 1.34);
 
     const { result } = renderHook(useCurrencyConverter);
     
@@ -119,9 +111,7 @@ describe('useCurrencyConverter', () => {
   ${429}
   ${500}
   `('isError set on api error', async ({ status_code }) => {
-    const mock = jest.spyOn(request, 'getConversion').mockImplementation((params) => {
-      return Promise.resolve({ status: status_code } as AxiosResponse<CurrencyPayload>);
-    });
+    const mock = setupMockInstance(status_code)
 
     const { result } = renderHook(useCurrencyConverter);
     

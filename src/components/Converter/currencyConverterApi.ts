@@ -12,5 +12,5 @@ export type ConversionProps = {
  * @returns 
  */
 export const getConversion = (params: ConversionProps) : Promise<AxiosResponse<CurrencyPayload>> => {
-  return axios.get('latest', { params });
+  return axios.get('/latest', { params });
 };

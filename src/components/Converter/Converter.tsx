@@ -14,7 +14,7 @@ const Converter : FC<ConverterProps> = ({ value, from, to }) : ReactElement => {
   useEffect(() => {
     convertCurrency(from);
   }, [from]);
-
+  
   // present error screen if there is an api error
   if (isError)
     return (<p className="inline-block m-3 p-2">An error has occurred. Please try back later.</p>);

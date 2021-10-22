@@ -5,8 +5,8 @@ import { render, screen } from '@testing-library/react';
 import * as converterHooks from '../currencyConverterHooks';
 import { mockData } from '../utils';
 
-describe('renders component', () => {
-  test('loading spinner', async () => {
+describe('render Converter component', () => {
+  test('null data should show loading spinner', async () => {
     jest.spyOn(converterHooks, 'useCurrencyConverter').mockReturnValue({
       data: null,
       isError: false,
@@ -16,7 +16,7 @@ describe('renders component', () => {
     expect(await screen.findByTestId('converter-spinner')).toBeInTheDocument();
   });
 
-  test('error message', async () => {
+  test('error flag set should show error message', async () => {
     jest.spyOn(converterHooks, 'useCurrencyConverter').mockReturnValue({
       data: null,
       isError: true,
@@ -26,7 +26,7 @@ describe('renders component', () => {
     expect(await screen.findByText('An error has occurred. Please try back later.')).toBeInTheDocument();
   });
   
-  test('main component', async () => {
+  test('valid payload should show main component', async () => {
     jest.spyOn(converterHooks, 'useCurrencyConverter').mockReturnValue({
       data: {
         query: {
@@ -43,8 +43,8 @@ describe('renders component', () => {
   });
 });
 
-describe('valid value supplied', () => {
-  test('should convert value', async () => {
+describe('Converter', () => {
+  test('valid value should be converted', async () => {
     jest.spyOn(converterHooks, 'useCurrencyConverter').mockReturnValue({
       data: {
         query: {
@@ -62,7 +62,7 @@ describe('valid value supplied', () => {
     expect(element.textContent).toBe('0.803');
   });
 
-  test('value is empty', async () => {
+  test('empty value should not be converted', async () => {
     jest.spyOn(converterHooks, 'useCurrencyConverter').mockReturnValue({
       data: {
         query: {
@@ -79,10 +79,8 @@ describe('valid value supplied', () => {
     const element = await screen.findByTestId('converter-component');
     expect(element.textContent).toBe('-');
   });
-});
 
-describe('invalid input value', () => {
-  test('value is not a number', async () => {
+  test('non-numeric value should return error message', async () => {
     jest.spyOn(converterHooks, 'useCurrencyConverter').mockReturnValue({
       data: {
         query: {
